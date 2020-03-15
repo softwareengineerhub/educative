@@ -22,8 +22,7 @@ public class Main {
     }
     
     public static int findFirstUnique(int[] arr){
-        int res = -1;        
-        
+        int res = -1;                
         for(int i=0;i<arr.length;i++){
             int count = 0;
             for(int j=0;j<arr.length;j++){
@@ -34,8 +33,7 @@ public class Main {
             if(count==1){
                 return arr[i];
             }
-        }
-        
+        }        
         return res;
     }
     
