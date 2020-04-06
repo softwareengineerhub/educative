@@ -8,6 +8,7 @@ package com.app03.graph.сh04.findallpathes;
 import com.app03.graph.сh00.graph.MyGraph;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Stream;
 
 /**
  *
@@ -34,6 +35,8 @@ public class Main {
         for(Stack<Integer> path: result){
             System.out.println(path);
         }
+        
+        //System.out.println("");
     }
     
 }
