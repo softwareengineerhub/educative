@@ -1,3 +1,5 @@
 target/
+idea/
 /algs-and-datastructures/target
 /trash-forgraph/target
+/find-min-moves/.idea
