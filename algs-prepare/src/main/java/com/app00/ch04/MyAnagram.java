@@ -10,7 +10,10 @@ import java.util.stream.Stream;
 public class MyAnagram {
 
     public static void main(String[] args) {
-
+        String a = "eat";
+        String b = "tea";
+        boolean result = isAnagram(a,b);
+        System.out.println("result="+result);
     }
 
     private static boolean isAnagram3(String a, String b){
