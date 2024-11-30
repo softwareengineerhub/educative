@@ -1,4 +1,4 @@
-package com.app00.ch03;
+package com.app00.ch03.binarytree;
 
 public class MyBinaryNode {
     private MyBinaryNode parent;

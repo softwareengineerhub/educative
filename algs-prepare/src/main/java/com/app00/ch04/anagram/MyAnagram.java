@@ -1,4 +1,4 @@
-package com.app00.ch04;
+package com.app00.ch04.anagram;
 
 import java.util.Arrays;
 import java.util.HashMap;

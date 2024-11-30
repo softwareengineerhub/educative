@@ -1,4 +1,4 @@
-package com.app00.ch07;
+package com.app00.ch07.lru;
 
 import java.util.HashMap;
 import java.util.LinkedList;

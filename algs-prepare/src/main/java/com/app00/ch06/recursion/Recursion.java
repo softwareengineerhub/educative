@@ -1,4 +1,4 @@
-package com.app00.ch06;
+package com.app00.ch06.recursion;
 
 public class Recursion {
 
