@@ -9,18 +9,18 @@ public class BFS {
 
     public void traverseGraph(Graph g, int source) {
         LinkedList<Integer> list = g.getArray()[source];
-        if(list==null || list.isEmpty()){
+        if (list == null || list.isEmpty()) {
             return;
         }
         StringBuilder result = new StringBuilder();
         Queue<Integer> queue = new LinkedList<>();
         queue.add(source);
-        while(!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             int tmp = queue.remove();
             result.append(tmp);
             LinkedList<Integer> children = g.getArray()[tmp];
-            if(children!=null){
-                for(int i: children){
+            if (children != null) {
+                for (int i : children) {
                     queue.add(i);
                 }
             }
