@@ -7,9 +7,9 @@ import java.util.Map;
 public class SymmetricPairs {
 
     public static void main(String[] args) {
-        int[][] arr = new int[][]{{1, 2}, {3, 4}, {5, 9}, {4, 3}, {9, 5}};
+        int[][] arr = new int[][]{{1, 2}, {3, 4}, {5, 9}, {4, 3}, {9, 5}, {1, 6}};
         String res = findSymmetric(arr);
-        System.out.println("res="+res);
+        System.out.println("res=" + res);
     }
 
     public static String findSymmetric(int[][] arr) {
