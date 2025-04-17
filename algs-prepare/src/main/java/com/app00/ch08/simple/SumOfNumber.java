@@ -9,7 +9,7 @@ public class SumOfNumber {
 
     private static int sumOfDigests(int value){
         int res = 0;
-        while(value%10!=0){
+        while(value%10!=0 || Math.abs(value) < 10){
             res+=value%10;
             value = value/10;
         }
