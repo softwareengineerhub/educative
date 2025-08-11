@@ -50,6 +50,24 @@ public class Main {
         action.merge(left, right, m);
         System.out.println(Arrays.toString(left));
         System.out.println(Arrays.equals(left, new int[]{1, 2, 3, 4, 5, 6, 8, 9, 10, 11}));
+
+
+        System.out.println("------------------------");
+        left = new int[]{8, 9, 10, 11, 0, 0, 0, 0, 0};
+        right = new int[]{2, 3, 4, 5, 6};
+        m = 5;
+        action.merge(left, right, m);
+        System.out.println(Arrays.toString(left));
+        System.out.println(Arrays.equals(left, new int[]{2, 3, 4, 5, 6, 8, 9, 10, 11}));
+
+
+        System.out.println("------------------------");
+        left = new int[]{2, 3, 4, 5, 6,0,0,0,0};
+        right = new int[]{8, 9, 10, 11};
+        m = 4;
+        action.merge(left, right, m);
+        System.out.println(Arrays.toString(left));
+        System.out.println(Arrays.equals(left, new int[]{2, 3, 4, 5, 6, 8, 9, 10, 11}));
     }
 
 }
