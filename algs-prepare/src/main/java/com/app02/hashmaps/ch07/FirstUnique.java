@@ -13,9 +13,14 @@ public class FirstUnique {
 
   public static int findFirstUnique(int[] arr){
     Set<Integer> set = new HashSet<>();
-    for(int a: arr){
-      set.add(a);
+    for(int i=0;i<arr.length;i++){
+      if(set.contains(arr[i])){
+        set.remove(arr[i]);
+      } else {
+        set.add(arr[i]);
+      }
     }
+    System.out.println("unique set="+set);
 
     for(int i=0;i<arr.length;i++){
       if(set.contains(arr[i])){
