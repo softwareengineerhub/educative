@@ -1,0 +1,7 @@
+1. Sharding VS Partitions ?
+Both are about splitting system into parts.
+Partition - logically
+Sharding - phisically
+
+Partition - application level
+Sharding - infrastructure level

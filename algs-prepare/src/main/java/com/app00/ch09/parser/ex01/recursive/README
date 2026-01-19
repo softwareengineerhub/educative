@@ -1,0 +1,27 @@
+Why recursion does NOT automatically mean O(n²)
+People often think:
+“Recursion = loop inside loop = O(n²)”
+That’s not true unless:
+Each recursive call processes the same characters again
+In a correct expression parser:
+Each recursive call works on a different part of the string
+No character is reprocessed by another call
+So the work is distributed, not duplicated.
+
+1. Visualizing the work
+Imagine the string as positions:
+0 1 2 3 4 5 6 7 8 9 10
+( 3 + 5 ) * 2 + ( 6 - 3 )
+The outer call processes everything
+When it hits (, it hands off the work inside to a recursive call
+That recursive call finishes and returns
+Control continues from where it left off
+Key point:
+Every character is “handled” once total, not once per recursion level.
+
+2. Mathematical intuition
+Let:
+n = length of the expression
+Total work:
+work(char 1) + work(char 2) + ... + work(char n)
+Each work(char i) is O(1)

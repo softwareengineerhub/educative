@@ -1,0 +1,152 @@
+CQRS:
+Command - write operation
+Query
+Responsibility
+Separation
+
+Benefits:
+1) History of events in your system
+2) Scale r/w individually
+3) Complete rebuild is possible / Play from scratch
+4) Temporary Queries (reproduce behaviour for 1 minth)
+5) Event reply
+6) Examples:
+- git
+- DB Transaction Logs
+
+
+1) Event must be Immutable
+2) Same logic for Delete - we never delete data from event queu, we just send another Event  (delete)
+(only in case you are forsted to delete according to Regulatory/Compiance)
+
+First Improvement (but we still work with 1 DB)
+We just added complexity, but no benefits
+Split to w/r path:
+QueryEndpoint		CommandEndpoint
+QueryService		CommandService
+QueryDao			CommandDao
+				DB
+
+We need to add 	EventHandlers
+Split to w/r path:
+QueryEndpoint			CommandEndpoint
+QueryService			CommandService
+QueryDao				CommandDao
+|							emit Event
+|								|
+|			EventHandler <--EventStorage
+|				|
+----->Read Storage
+
+Now DataModel from Read can be differetn to data model we use for Write
+You can preaggregate data in read storage
+
+So, now we can have
+1) Individual scalability and deployment options (and microservice arch come to play)
+2) Technology freedom for R/W operations and different Readers
+(please do not make technology zoo)
+----------------------------------------------------------------------------------------
+Challenges:
+1) Consistency
+Eventual Consistency
+(we might have delay in update of READ storage - for example every 5 minutes)
+We always want to chose Availability vs Consistency.
+You need to use you business domain to understand what do you need.
+
+2) Validation
+Unique validation could be difficult
+We must to validation of unique in the event storage, becuase if in read storage - it may be to late.
+But now we need to make complecated logic to define current state - huge performacne issues.
+Use next approach:
+a) How high is the probability that a validation fails ?
+b) Which data is required for the validation ?
+c) Where is the required data stored ?
+What is business impact ? How important is this validation ?
+We might have compensation events
+
+We can validate from WriteStore, ReadStore, EventHandler
+It would be great to make validation from ReadStore
+
+
+3) Parallel Updates
+What happens when Alice and Bob share an account and both update the email address at the same time.
+In regular approach we use OPTIMISTIC or pessimistic locking.
+
+Pessimistic locking is not working on CQRS.
+We must do next:
+sent a LockEvent.
+It is better to use optimistic lock and sent event with version field.
+Each writing event increasing the version.
+
+Version mismatch will be detected only in READ storage --> we must trigger EmailChangeFailedEvent
+
+
+-------------------------------------------------------------------------------------------------------
+Logging in CQRS and Microcervices
+
+
+We need to have 2 Ids:
+1) Trace/Correlation ID (tech id): the one you can track throu all services
+2) Business ID (domain id): the thing you care about (orderId, itemId)
+
+Standart http headers:
+W3C standard headers (HTTP/gRPC):
+traceparent, tracestate (for distributed tracing)
+Optional: baggage (key/value metadata like itemId=1234)
+
+In CQRS you can add metdata to each Command/Event
+In Kafka - it is record.headers().add("key", "value")
+In RabbitMQ and JMS - also headers
+
+
+
+
+
+Traceheader:
+The "traceparent" header is part of the W3C Trace Context standard.
+It’s the official way to pass tracing information between services in a distributed system.
+Format:
+The header looks like this:
+traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01
+Breakdown:
+a) Version → 00
+b) Trace ID → 4bf92f3577b34da6a3ce929d0e0e4736 Unique per end-to-end request (same across all services for that request)
+c) Parent Span ID → 00f067aa0ba902b7 The span in the previous service that called you
+d) Trace Flags → 01 Bit flags (e.g., 01 = “record this trace”, 00 = “don’t record”)
+
+
+
+Example in a microservices call chain:
+	Client → API Gateway → Service A → Service B
+		traceparent: 00-abcd1234abcd1234abcd1234abcd1234-1111222233334444-01
+
+Service A receives it, logs it, creates a child span, and sends a new traceparent to Service B with:
+	Same Trace ID (4bf92f3577b34da6a3ce929d0e0e4736)
+	New Parent Span ID (Service A’s span) - a0f067aa0ba902b7
+Service B continues with the same trace.
+
+
+
+How it’s used
+a) HTTP: Passed as an HTTP header (traceparent + optional tracestate)
+b) Messaging: Passed as message headers/attributes (Kafka, RabbitMQ, etc.)
+c) Tracing systems read these headers to join spans into one trace.
+
+
+
+Tracestate:
+tracestate is optional, vendor-specific, and carries extra context that’s not in traceparent.
+It’s used when you want multiple tracing systems to work together or pass extra tuning info along the trace.
+tracestate: vendor1Key=value1,vendor2Key=value2
+Example:
+Let’s say you’re using two tracing systems:
+Vendor A (e.g., Datadog) uses sampling priority and tenant ID.
+Vendor B (e.g., Lightstep) uses custom trace settings.
+HTTP headers might look like:
+traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01
+tracestate: dd=s:1;t.dm:-4,ls=congo=t61rcWkgMzE
+
+
+In short:
+traceparent → always required for cross-service tracing (trace ID, span ID).
+tracestate → optional, vendor/system-specific info, forwarded unchanged.

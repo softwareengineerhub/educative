@@ -1,0 +1,8 @@
+a) Internal P2P transfer: A transfers $10 to B
+b) Should be able to transfer between any customer, see history, see balance
+    2. Customer A, Account A (USD) (Balance: $100)
+    3. Customer B, Account B (USD) (Balance: $50)
+
+c) Q: What do the database entities/models/tables look like? What is the logic flow to execute this action (high level)? How does the database look like before and after the action?
+
+

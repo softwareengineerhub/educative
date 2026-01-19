@@ -1,0 +1,9 @@
+Why do we need read lock if have only read operations ?
+
+If your program truly only ever reads immutable data, then you don’t need any lock.
+Multiple threads can safely read shared immutable state concurrently.
+
+But in practice, things are usually more nuanced:
+1) Data may look read-only, but might be updated at some point.
+2) You may want a lock to ensure readers don’t see inconsistent or partially updated state.
+3) Libraries or frameworks sometimes expose ReentrantReadWriteLock so you’re prepared for future writes.

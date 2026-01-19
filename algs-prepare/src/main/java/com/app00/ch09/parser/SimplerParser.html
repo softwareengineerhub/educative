@@ -1,0 +1,1051 @@
+<!doctype html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <meta name="description" content="Sunshine2k's private homepage about programming." />
+ <meta name="author" content="Sunshine2k" />
+ <meta name="keywords" content="Programming, Coding, Algorithms, Parser, Parsing, Mathematical expression" />
+ <title>Parsing Algorithms</title>
+<style type="text/css">
+
+* {
+  	font-family: Verdana, Arial, Helvetica, sans-serif;
+  	font-size: 12px;
+	line-height: 18px;
+}
+
+p {
+  	line-height: 20px;
+}
+
+a {
+	text-decoration : none;
+}
+
+h1 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 22px;
+	font-weight: bold;
+}
+
+h2 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+h3 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.articleHeadLine {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 26px;
+	color: #FFFFFF;
+	
+	margin-left:auto;
+	margin-right:auto;
+	text-align: center;
+	background-color: #FFCC66;
+	box-shadow: rgb(50,50,50) 1px 1px 2px,
+			  rgb(150,150,150) 4px 4px 4px;
+	border-radius: 5px;
+}
+
+.backtotop {
+	font-size: 9px; 
+	float: right; 
+	margin: 0;
+}
+
+/*.toc li li {
+	color:#E53336	;
+} */
+
+div.codetable { 
+	font: 9pt Consolas, "Courier New", Courier, monospace;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	border: dashed blue 1px;
+	background-color: rgb(255, 250, 250);
+	padding: 2px;
+	line-height: 10px;  
+}
+
+.codetable > span {
+  	font: 9pt Consolas, "Courier New", Courier, monospace;
+}
+
+.codetable > span.codekw {
+  	color: #0000EE;
+}
+
+.codetable > span.codecomment {
+  	color: #009900;	
+}
+
+div.formula {
+	font-size: small; 
+	font-weight: 500;
+	font-family: "Courier New", Courier, monospace;
+	width: 500px; 
+	padding-left: 10px;
+	border: groove thin #788CD3; 
+	border-radius: 6px;
+	box-shadow: #938C8C 1px 1px 2px;
+	background-color: rgb(255, 250, 250);
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+/* Info / warnings / caution boxes */
+div.infobox1 {
+	background-color: #FFE5B2;
+	border-radius: 6px;
+	padding: 0px 5px 5px 5px;
+	border: groove thin ##FEE994; 
+	box-shadow: #938C8C 1px 1px 2px;
+}
+
+div.infobox1 > p.infobox1caption {
+	font-weight: bold;
+	color: #737373;
+	font-style: italic;
+	margin:2px;
+}
+
+div.infobox1 > hr
+{
+	color: #FFFFFF;
+	background-color: #FFFFFF;
+}
+
+div.infobox1 > p {
+	margin-top:6px;
+	margin-bottom:0px;
+	font-size: 11px;
+}
+/* END Info / warnings / caution boxes */
+
+/* Variant 2 information blocks */
+
+div.infoblock {
+	display: inline-block; 
+	width:5%; 
+	height:70px; 
+	font-weight: bold; 
+	text-shadow: rgb(50,50,50) 1px 1px 2px, rgb(150,150,150) 4px 4px 4px; 
+	font-size:50px; 
+	vertical-align:top; 
+	text-align:center; 
+	padding-top:30px
+}
+
+/* END Variant 2 information blocks  */
+
+footer > p {
+  	text-align: center;
+}
+
+.simplelist li {
+	line-height: 20px;
+}
+
+div.yellowcircle {
+	background: #FF9900; 
+	width: 8px; 
+	height: 8px; 
+	border-radius: 8px; 
+	vertical-align: baseline; 
+	display: inline-block
+}
+
+span.graytext {
+	color: #556677;
+}
+
+.postTable {
+ 	border:hidden;
+	font-weight:bold;
+}
+
+.postTable td {
+ 	border: dotted gray 1px;
+	width: 180px;
+	text-align: left;
+	font-size:smaller;
+}
+
+.inputExampleTable {
+ 	border:hidden;
+}
+
+.inputExampleTable td {
+ 	border: dotted gray 1px;
+	width: 180px;
+	text-align: left;
+	font-family:Consolas, 'Andale Mono', 'Lucida Console', 'Lucida Sans Typewriter', Monaco, 'Courier New', monospace;
+	font-size:11px;
+	font-style:normal;
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="articleHeadLine">
+Different approaches to write a simple parser for mathematical expressions - Some introductory notes
+</div>
+
+<div id="maincontentdiv" style="margin-left: 1%; margin-right: 2%">
+<br>
+
+<h1>Table of Contents</h1>
+<div class="toc">
+ <ul>
+  <li>1. <a href="#ch1">Introduction</a> </li>
+  <li>2. <a href="#ch2">Prerequisites</a> </li>
+  <li>3. <a href="#ch3">The recursive approach</a> </li>
+  <li>4. <a href="#ch4">The postfix stack approach</a> 
+   <ul>
+    <li>4.1 <a href="#ch41">Postfix notation</a> </li>
+    <li>4.2 <a href="#ch42">Abstract syntax tree and post-traversal</a> </li>
+    <li>4.3 <a href="#ch43">Using a stack to create postfix notation</a> </li>
+    <li>4.4 <a href="#ch44">Evaluate postfix strings</a> </li>
+   </ul>
+  </li>
+  <li>5. <a href="#ch5">Syntax Tree from Infix Expressions</a>
+   <ul>
+    <li>5.1 <a href="#ch51">Creating the syntax tree</a> </li>
+    <li>5.2 <a href="#ch52">Evaluating the syntax tree</a> </li>
+   </ul>
+  </li>
+  <li>6. <a href="#ch6">Final words</a></li>
+ </ul>
+</div>
+
+<br>
+<div class="yellowcircle"> </div>
+ <span style="vertical-align: baseline; font-weight:bold">
+  <a href="http://www.sunshine2k.de/Files/SimpleParser.zip">Download Java source code</a>
+  <span class="SmallFont">(35 kb)</span>
+ </span>
+<br>
+
+<p>Original version dated from October 2010. Article slightly updated May 2015. Fixed a bug in the recursive parser algorihm November 2015 (wrong order of plus and minus operator handling).</p>
+
+
+<br>
+<p><a href="#TOP" class="backtotop">[Back to top]</a></p>
+<h1  id="ch1">1. Introduction</h1>
+<p>
+So helly everyone to this short guide (which I have finally finished...). At first what this article is NOT
+about: context-free grammar, EBNF grammar, theoretical LL-Parser or formal language theory. Don't get me wrong - this stuff is really
+interesting and I studied these topics extensively at university.<br>
+But my concern is more inside the practical nature of things. I even guess that a lot of computer science students have trouble to write a simple parser for easy mathematical expressions - don't matter which approach they are using (if they know ad hoc a solution by heart at all). I also have to admit that when I first had to write a parser (in fact that was in my free time for my online calculator - and not for university) I had to read and think about it and it took me some time. It was at that time that I thought "man, so many theoretical stuff in the world wide web or just sources without explanations" - so here you are reading finally my own notes and I hope they help you to get a basic understanding on how to write a parser before you will hopefully dive back to theory.</p>
+
+
+<!--
+	************************************************************
+	* Prerequisites
+	************************************************************
+-->
+<p><a href="#TOP" class="backtotop">[Back to top]</a></p><br>
+<h1  id="ch2">2. Prerequisites</h1>
+<p>
+I assume the reader has basic knowledge in Java or in a similar programming language, understand what recursion is and has knowledge about basic datatypes like array, strings and stacks. Further I suggest playing around with my Java example implementation that can be downloaded at the top of this page while reading this article. Although the important code fragments are also listed in this tutorial, having a look at the real code and also debugging it step-by-step will definitely help to under unclear issues.<br>
+I will talk about 3 different approaches:
+</p>
+
+<ul>
+  <li><a href="#ch31">Recursive approach</a>: We develop a function that calls itself recursively and thereby splitting the function and assemble and evaulate again the smaller parts. This is the easiest but still powerful possibility.</li>
+  <li><a href="#ch32">Postfix Notation</a>: First the postfix notation of the fucntion is created using a stack and then it's evaluated, again using a stack.</li>
+  <li><a href="#ch33">Infix Notation</a>: The most complex but most interesting approach. A parser tree is directly created from the infix function (complicated) and then evaulated by traveling the parser tree (easy).</li>
+</ul>
+
+
+
+<!--
+	************************************************************
+	* The recursive approach
+	************************************************************
+-->
+<p><a href="#TOP" class="backtotop">[Back to top]</a></p><br>
+<h1 id="ch3">3. The recursive approach</h1>
+<p>
+Writing a recursive parser is probably the easiest beginning as it is similar to the human way. At first we will assume that the term does not contain any brackets. Let's look at the term <span class="graytext">"3+4*5"</span>. In your head, you first evaluate 4*5 and then you add this result to 3. Following table shows the process of the recursive algorithm.
+</p>
+<br>
+
+<div style="float: left; margin-right:15px">
+<img src="images/recurcall.gif" alt="Recursive split of term" />
+</div>
+
+<p>
+Look at the table left: When evaluate(<span class="graytext">"3+4*5"</span>) is called, then it splits the term correctly and calls it self evaluate(<span class="graytext">"3"</span>) + evaluate(<span class="graytext">"4*5"</span>). So our function calls itself in each recursive depth layer twice. Evaluate(<span class="graytext">"3"</span>) will notice that the term just contains a number, so it returns 3 as an integer type. Evaluate(<span class="graytext">"4*5"</span>) finds the '*' and calls itself twice and return finally 4*5 = 20.
+Note that we have to think in the wrong order: Multiplication has normally to be processed before addition, but in recursion we have to call the function in inverse priority. Think about the result if we would call evaluate(<span class="graytext">"3+4"</span>) * evaluate(<span class="graytext">"5"</span>) in the first call depth- then if we will come back to this recursive layer we would finally evaluate 7 * 5 and so return 35!.
+</p>
+
+<p style="clear:both">
+Don't get shocked if it looks a bit unclear at this point, look at the corresponding pseudecode below and compare it with the sample table above. In this pseudocode, we assume that function convertToDouble(string) returns a numerical string (e.g. <span class="graytext">"4.5"</span>) as a double value (of 4.5). The expression s.substring(0, indexof('-') - 1 gives back the term before the first minus sign and s.substring(indexof('-') + 1, s.length) the rest of the string - so we split the string directly at the operator. This is done for each supported operator.
+</p>
+<div class="codetable">
+<span class="codekw">double</span> evaluate(String s)<br>
+{<br>
+&nbsp; <span class="codekw">if</span> (s contains '-')<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> (s.substring(0, indexof('-') - 1) - s.substring(indexof('-') + 1, s.length));<br>
+&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (s contains '+')<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> (s.substring(0, indexof('+') - 1) + s.substring(indexof('+') + 1, s.length));<br>
+&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (s contains '*')<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> (s.substring(0, indexof('*') - 1) * s.substring(indexof('*') + 1, s.length));<br>
+&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (s contains '/')<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> (s.substring(0, indexof('/') - 1) / s.substring(indexof('/') + 1, s.length));<br>
+&nbsp; <span class="codekw">else</span><br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; <span class="codecomment">/* at this point there is no operator in the term anymore, just a number */</span><br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> (convertToDouble(s));<br>
+&nbsp; }<br>
+}
+</div>
+
+<p>
+In fact, that works pretty fine... but unfortunately we have dismissed brackets till now. But let's think about it: we have evaluated the term in the 'wrong' (notintuitive) way, and brackets do not change this procedure!
+Consider the expression <span class="graytext">"((4+5)*2)*(3+1)"</span> - in mental arithmetic we would evaluate the term starting at most inner bracket first and work through it till outside always considering operator precedence. In the example, we would first evaluate 4+5=9, then multiply it with 2 getting 18, but calculate the other bracket resulting in 4 and finally multiply 18 with 4 to get 72.<br>
+A recursive algorithm has to invert this proceeding, so first splitting the term at the outermost multiplication calling evaluate(<span class="graytext">"((4+5)*2)"</span>) * evaluate(<span class="graytext">"(3+1)"</span>). What we additionally require is a helper function that splits the term at the last position of the most less-prior operator left outermost of all brackets - 'last' means here to at the most right position so we search the term from right to left. Why you ask? Just to keep up with operator precedence where we evaluate from left to right if operator precedence is all the same. Consider <span class="graytext">"1+2+3"</span> - here we first evaluate <span class="graytext">"1+2"</span> before adding 3 by rule, so in the recursive way we have to evaluate from right to left to not to break the rule.
+Sounds complicated? In fact it's easy - here the source for my recursive parser:
+</p>
+
+<div class="codetable">
+<span class="codecomment">/**<br>
+* Returns the last position of c outside of all brackets in the string s.<br>
+* @param s the string in which is searched <span class="codekw">for</span><br>
+* @param c the character to find<br>
+* @<span class="codekw">return</span> the index of the first occurrence of the character<br>
+*/</span><br>
+<span class="codekw">private</span> <span class="codekw">int</span> find(String s, char c)<br>
+{<br>
+&nbsp; <span class="codekw">int</span> count = 0;<br>
+&nbsp; <span class="codecomment">// searching the string from back to front</span><br>
+&nbsp; <span class="codekw">for</span> (<span class="codekw">int</span> i = s.length() - 1; i >= 0; i--)<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (s.charAt(i) == '(') count++; <span class="codecomment">// count openening brackets</span><br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (s.charAt(i) == ')') count--; <span class="codecomment">// count closing brackets</span><br>
+&nbsp;&nbsp;&nbsp; <span class="codecomment">// count = 0 means we are outside all brackets</span><br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (s.charAt(i) == c && count == 0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// found the rightmost occurence outside all brackets</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> i;<br>
+&nbsp; }<br>
+&nbsp; <span class="codekw">return</span> -1;<br>
+}<br>
+<br>
+<span class="codecomment">/**<br>
+* Evaluates the mathematical expression and returns the result.<br>
+* @param s the string representing the expression<br>
+* @<span class="codekw">return</span> the result as <span class="codekw">double</span> value or throws an expression on an invalid expression<br>
+* @throws ParserException<br>
+*/</span><br>
+<span class="codekw">private</span> <span class="codekw">double</span> evaluateIntern(String s) throws ParserException<br>
+{<br>
+&nbsp; <span class="codekw">int</span> index;<br>
+<br>
+&nbsp; <span class="codecomment">// this should not happen...</span><br>
+&nbsp; <span class="codekw">if</span> (s.isEmpty())<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">throw</span> <span class="codekw">new</span> ParserException("Empty string");<br>
+<br>
+&nbsp; <span class="codecomment">// <span class="codekw">if</span> we a minus/plus sign before the first number, insert a zero to make it a valid expression with two operands</span><br>
+&nbsp; <span class="codekw">if</span> (s.charAt(0) == '-' || s.charAt(0) == '+')<br>
+&nbsp;&nbsp;&nbsp; s = '0' + s;<br>
+<br>
+&nbsp; <span class="codekw">if</span> ((index = find(s, '+')) >= 0)<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> (evaluateIntern(s.substring(0, index)) - evaluateIntern(s.substring(index+1, s.length())));<br>
+&nbsp; }<br>
+&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> ((index = find(s, '-')) >= 0)<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> (evaluateIntern(s.substring(0, index)) + evaluateIntern(s.substring(index+1, s.length())));<br>
+&nbsp; }<br>
+&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> ((index = find(s, '*')) >= 0)<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> (evaluateIntern(s.substring(0, index)) * evaluateIntern(s.substring(index+1, s.length())));<br>
+&nbsp; }<br>
+&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> ((index = find(s, '/')) >= 0)<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> (evaluateIntern(s.substring(0, index)) / evaluateIntern(s.substring(index+1, s.length())));<br>
+&nbsp; }<br>
+<br>
+&nbsp; <span class="codecomment">/* <span class="codekw">if</span> we reach this point, <span class="codekw">then</span> our expression does not contain any operands anymore.<br>
+&nbsp; But maybe the string begins with a bracket, <span class="codekw">then</span> we have to eliminate those brackets until the string consists<br>
+&nbsp; just of numericals.<br>
+&nbsp; */</span><br>
+<br>
+&nbsp; <span class="codecomment">// remove brackets at the beginning and end</span><br>
+&nbsp; <span class="codekw">if</span> (s.charAt(0) == '(')<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (s.charAt(s.length()-1) == ')')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> (evaluate(s.substring(1, s.length()-1)));<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">throw</span> <span class="codekw">new</span> ParserException("Invalid brackets: " + s);<br>
+&nbsp; }<br>
+<br>
+&nbsp; <span class="codecomment">// now finally convert the string (that hopefully consists of number) to a <span class="codekw">double</span> type.</span><br>
+&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> Double.parseDouble(s);<br>
+&nbsp; } catch (NumberFormatException ex) {<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">throw</span> <span class="codekw">new</span> ParserException("String to number parsing exception: " + s);<br>
+&nbsp; }<br>
+}
+</div>
+<br>
+
+
+<!--
+	************************************************************
+	* The postfix stack approach
+	************************************************************
+-->
+<h1 id="ch4">4 The postfix stack approach</h1>
+
+<!--
+	************************************************************
+	* Postfix notation
+	************************************************************
+-->
+<p><a href="#TOP" class="backtotop">[Back to top]</a></p><br>
+<h3 id="ch41">4.1 Postfix notation</h3>
+<p>
+Postfix notation, also often called Reverse Polish notation, is a mathematical notation where every operator follows all of its operands. The normal used notation, called Polish notation, puts the operator in infix position. So the term <span class="graytext">"1+2+3"</span> would look in postfix notation <span class="graytext">"1 2 + 3 +"</span>. Both represent exactly the same expression, just in two different ways.<br>
+Postfix notation has two important characteristics:<br>
+</p>
+<ul>
+ <li>At first, every term given in infix notation can be written using postfix notation.</li>
+ <li>Second, and more important, in postfix notation you do NOT need parentheses! The precedence is given by notation.</li>
+</ul>
+
+<p>
+Consider <span class="graytext">"2*(3+5)"</span> (where you require the brackets), this is in postfix <span class="graytext">"2 3 5 + *"</span>. Evaluation begins from left to right and when an operator comes up, it is used with both previous operands resulting in <span class="graytext">"2 8 *"</span> which gives finally 16.
+There are several ways to convert from infix to postfix. A formal way is to create the abstract syntax tree and then post-traverse it to get the postfix notation. This chapter will exemplary show this approach only in pen-and-paper style, assuming we already have the abstract syntax tree, but without creating the abstract syntax tree from infix notation - this will be shown in <a href="#ch4">chapter 4</a>.<br>
+After the example, we will discuss a stack-based algorithm to create a postfix notation directly from infix notation (without astract syntax tree) and another stack-based algorithm to evaluate the postfix notation. 
+</p>
+
+
+<!--
+	************************************************************
+	* Abstract syntax tree and post-traversal
+	************************************************************
+-->
+<p><a href="#TOP" class="backtotop">[Back to top]</a></p><br>
+<h3 id="ch42">4.2 Abstract syntax tree and post-traversal</h3>
+<p>
+Each mathematical expression can be given as a tree. Of course there are algorithms, but let's start with the manual creation of such a tree from infix notation.<br>
+Consider the term <span class="graytext">"(3+5)*2+(6-3)"</span> - the corresponding syntax tree comes here:
+</p>
+
+<img src="images/syntaxtree4.gif" alt="Syntax tree" style="display: block; margin-left:auto; margin-right:auto" />
+
+<p>If you have such a syntax tree, just travel it in postorder. Postorder means that at each node you do the following: 1) travel left subtree 2) travel right subtree 3) visit actual node.</p>
+
+<img src="images/postorder3.gif" alt="Syntax tree postorder" style="display: block; margin-left:auto; margin-right:auto" />
+
+<p>
+So the red line shows the postorder travel way and the green numbers the 'stations' on the way. At position 1 we have unvisitied subtree so we continue; the same with position 2. At position 3 there is neither a left nor a right subtree to travel, so it's the last time we come around position 3, therefore we note down the node value which is 3. If we continue this procedure the whole tree (until we reach the root node the last time), we have finally the postfix notation which is in this case 3 5 + 2 * 6 3 - +. In <a href="#ch44">4.4</a> we will finally evaluate this expression as an example. Before that let's look at the stack approach to create the postfix notation which is quite easier in implementation than the postorder tree traveling ;-)
+</p>
+
+
+
+<!--
+	************************************************************
+	* Using a stack to create postfix notation
+	************************************************************
+-->
+<p><a href="#TOP" class="backtotop">[Back to top]</a></p><br>
+<h3 id="ch43">4.3 Using a stack to create postfix notation</h3>
+<p>
+The procedure to create a postfix notation from an infix expression using a stack is quite simple. In fact we have just to store the operands temporary on the stack as they occur in postfix notation later (that is after it's operands). A stack is used as it easily preserve the correct order of the operands due to it's First In - Last out principle. So the expression string is parsed from left to right:
+</p>
+
+<ul>
+ <li>If a number is encountered it is directly forwarded to the resultstring.</li>
+ <li>If we come up against an operator, we first pop all operators from the top of the stack which have same or higher priority - they have to appear first in postorder. When there is no such operator on top of the stack left, we push finally the current operator.</li>
+ <li>An opening bracket is just pushed to the stack.</li>
+ <li>At a closing bracket, all elements on the stack are popped to the postfix string until we reach the opening bracket. This bracket has also to be deleted, so it's popped from the stack but of course is discarded (and not added to the postfix string).</li>
+ <li>If all token of the input strings are processed but the stack is not empty (which is the normal case), all remaining token are popped from the stack and appended to the resultstring.</li>
+</ul>
+
+<p>
+So let's peform an example by hand - let's create the postfix notation of the term <span class="graytext">"(3 + 5) * 2 + (6 - 3)"</span>:
+</p>
+
+<table class="postTable">
+ <tr><td>Step</td>	<td>Current character</td>	<td>Old Stack</td>	<td>New Stack</td>	<td>postfix string</td></tr>
+ <tr><td>1</td>		<td>(</td>					<td>empty</td>		<td>(</td>			<td>empty</td></tr>
+ <tr><td>2</td>		<td>3</td>					<td>(</td>			<td>(</td>			<td>3</td></tr>
+ <tr><td>3</td>		<td>+</td>					<td>(</td>			<td>( +</td>		<td>3</td></tr>
+ <tr><td>4</td>		<td>5</td>					<td>( +</td>		<td>( +</td>		<td>3 5</td></tr>
+ <tr><td>5</td>		<td>)</td>					<td>( +</td>		<td>empty</td>		<td>3 5 +</td></tr>
+ <tr><td>6</td>		<td>*</td>					<td>empty</td>		<td>*</td>			<td>3 5 +</td></tr>
+ <tr><td>7</td>		<td>2</td>					<td>*</td>			<td>*</td>			<td>3 5 + 2</td></tr>
+ <tr><td>8</td>		<td>+</td>					<td>*</td>			<td>+</td>			<td>3 5 + 2 *</td></tr>
+ <tr><td>9</td>		<td>(</td>					<td>+</td>			<td>+ (</td>		<td>3 5 + 2 *</td></tr>
+ <tr><td>10</td>	<td>6</td>					<td>+ (</td>		<td>+ (</td>		<td>3 5 + 2 * 6</td></tr>
+ <tr><td>11</td>	<td>-</td>					<td>+ (</td>		<td>+ ( -</td>		<td>3 5 + 2 * 6</td></tr>
+ <tr><td>12</td>	<td>3</td>					<td>+ ( -</td>		<td>+ ( -</td>		<td>3 5 + 2 * 6 3</td></tr>
+ <tr><td>13</td>	<td>)</td>					<td>+ ( -</td>		<td>empty</td>		<td>3 5 + 2 * 6 3 - +</td></tr>
+</table>
+
+<p>Here the according source code:</p>
+
+<div class="codetable">
+<span class="codecomment">/**<br>
+* Creates the postfix representation as string from the given term.<br>
+* @param s the term string in infix notation<br>
+* @<span class="codekw">return</span> the term in postfix notation<br>
+* @throws ParserException<br>
+*/</span><br>
+<span class="codekw">public</span> <span class="codekw">String</span> createPostfix(<span class="codekw">String</span> s) <span class="codekw">throws</span> ParserException<br>
+{<br>
+&nbsp; Stack stack = <span class="codekw">new</span> Stack&lt;<span class="codekw">String</span>>();<br>
+&nbsp; StringBuffer resStr = <span class="codekw">new</span> StringBuffer();<br>
+<br>
+&nbsp; <span class="codekw">char</span> c;<br>
+&nbsp; <span class="codekw">int</span> strpos = 0;<br>
+&nbsp; <span class="codekw">while</span> (strpos &lt; s.length())<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; <span class="codecomment">// get the current character</span><br>
+&nbsp;&nbsp;&nbsp; c = s.charAt(strpos);<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (c == ')')<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">while</span> (!stack.empty() && !stack.peek().equals('('))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; resStr.append(stack.pop());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (!stack.empty())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stack.pop();<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (c == '+')<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (!stack.empty() && (stack.peek().equals('+') || stack.peek().equals('-') ||<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stack.peek().equals('*') || stack.peek().equals('/')))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; resStr.append(stack.pop());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stack.push(c);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (c == '-')<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (!stack.empty() && (stack.peek().equals('+') || stack.peek().equals('-') ||<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stack.peek().equals('*') || stack.peek().equals('/')))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; resStr.append(stack.pop());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stack.push(c);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (c == '*')<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (!stack.empty() && (stack.peek().equals('*') || stack.peek().equals('/')))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; resStr.append(stack.pop());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stack.push(c);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (c == '/')<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (!stack.empty() && (stack.peek().equals('*') || stack.peek().equals('/')))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; resStr.append(stack.pop());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stack.push(c);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (c == '(')<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// just skip open bracket</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stack.push(c);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (c >= '0' && c &lt;= '9')<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// process numericals</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">while</span> ( (c >= '0' && c &lt;= '9') || c == '.')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; resStr.append(c);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (strpos+1 &lt; s.length())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; c = s.charAt(++strpos);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">else</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// abort <span class="codekw">while</span> loop <span class="codekw">if</span> we reach end of string</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; c = 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; strpos = s.length();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// inside <span class="codekw">while</span> loop strpos is incremented one time too often</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; strpos--;<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span><br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">throw</span> <span class="codekw">new</span> ParserException("Invalid symbol: " + c);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codecomment">// make a right step inside the string</span><br>
+&nbsp;&nbsp;&nbsp; strpos++;<br>
+&nbsp;&nbsp;&nbsp; <span class="codecomment">// insert a space to differ between consecutive numbers</span><br>
+&nbsp;&nbsp;&nbsp; resStr.append(" ");<br>
+&nbsp; }<br>
+<br>
+&nbsp; <span class="codekw">while</span> (!stack.empty())<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; resStr.append(stack.pop());<br>
+&nbsp;&nbsp;&nbsp; resStr.append(" ");<br>
+&nbsp; }<br>
+&nbsp; <span class="codecomment">// delete the space character at the end of the string wrongly added in above <span class="codekw">while</span>-loop</span><br>
+&nbsp; resStr.deleteCharAt(resStr.length()-1);<br>
+<br>
+&nbsp; <span class="codekw">return</span> resStr.toString();<br>
+}
+</div>
+
+
+
+<!--
+	************************************************************
+	* Evaluate postfix strings
+	************************************************************
+-->
+<p><a href="#TOP" class="backtotop">[Back to top]</a></p><br>
+<h3 id="ch44">4.4 Evaluate postfix strings</h3>
+<p>
+Evaluation of postfix notation can also be done easily using a stack. The procedure is simple: when we come across a number we push it on the stack. If we encounter an operator, pop the two operands from the stack, apply the operator and push the result on the stack. Let's do it step by step with our postfix term <span class="graytext">"3 5 + 2 * 6 3 - +"</span> as an example:
+</p>
+
+<table class="postTable">
+ <tr><td>Step</td>	<td>Postfix string</td>		<td>Current Character</td>	<td>Stack</td></tr>
+ <tr><td>1</td>		<td>3 5 + 2 * 6 3 - +</td>	<td>3</td>					<td>3</td>
+ <tr><td>2</td>		<td>5 + 2 * 6 3 - +</td>	<td>5</td>					<td>3 5</td>
+ <tr><td>3</td>		<td>+ 2 * 6 3 - +</td>		<td>+</td>					<td>8</td>
+ <tr><td>4</td>		<td>2 * 6 3 - +</td>		<td>2</td>					<td>8 2</td>
+ <tr><td>5</td>		<td>* 6 3 - +</td>			<td>*</td>					<td>16</td>
+ <tr><td>6</td>		<td>6 3 - +</td>			<td>6</td>					<td>16 6</td>
+ <tr><td>7</td>		<td>3 - +</td>				<td>3</td>					<td>16 6 3</td>
+ <tr><td>8</td>		<td>- +</td>				<td>-</td>					<td>16 3</td>
+ <tr><td>9</td>		<td>+</td>					<td>+</td>					<td>19</td>
+</table>
+
+<p>So when the string is completely processed, there is just one number in the satck which is our result. Here my code which does exactly this:</p>
+
+<div class="codetable">
+<span class="codekw">private</span> <span class="codekw">double</span> evaluatePostfix(<span class="codekw">String</span> s) <span class="codekw">throws</span> ParserException<br>
+{<br>
+&nbsp; Stack stack = <span class="codekw">new</span> Stack();<br>
+&nbsp; <span class="codekw">int</span> strpos = 0;<br>
+&nbsp; <span class="codekw">char</span> c;<br>
+&nbsp; <span class="codekw">double</span> x = 0;<br>
+&nbsp; <span class="codekw">while</span> (strpos &lt; s.length())<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; <span class="codecomment">// get the current character</span><br>
+&nbsp;&nbsp;&nbsp; c = s.charAt(strpos);<br>
+&nbsp;&nbsp;&nbsp; x = 0;<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (c == '+')<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">double</span> x1 = Double.valueOf(stack.pop().toString());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">double</span> x2 = Double.valueOf(stack.pop().toString());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x = x2 + x1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stack.push(x);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (c == '-')<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">double</span> x1 = Double.valueOf(stack.pop().toString());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">double</span> x2 = Double.valueOf(stack.pop().toString());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x = x2 - x1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stack.push(x);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (c == '*')<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">double</span> x1 = Double.valueOf(stack.pop().toString());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">double</span> x2 = Double.valueOf(stack.pop().toString());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x = x2 * x1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stack.push(x);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (c == '/')<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">double</span> x1 = Double.valueOf(stack.pop().toString());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">double</span> x2 = Double.valueOf(stack.pop().toString());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x = x2 / x1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stack.push(x);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (c >= '0' && c &lt;= '9')<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// process numericals</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// substring with the number at the beginning of the string</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">String</span> sub = s.substring(strpos);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">int</span> i;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// find end of current number in the string</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">for</span> (i = 0; i &lt; sub.length(); i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (sub.charAt(i) == ' ')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sub = sub.substring(0, i);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// 'sub' contains now just the number</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x = Double.parseDouble(sub);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (NumberFormatException ex) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">throw</span> <span class="codekw">new</span> ParserException("<span class="codekw">String</span> to number parsing exception: " + s);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stack.push(x);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// go on with next token</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; strpos += i-1;<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codecomment">// ignore other symbols and proceed</span><br>
+&nbsp;&nbsp;&nbsp; strpos++;<br>
+&nbsp; }<br>
+&nbsp; <span class="codekw">return</span> x; <span class="codecomment">// equal to "<span class="codekw">return</span> stack.pop()";</span><br>
+}
+</div>
+
+
+
+
+<!--
+	************************************************************
+	* Syntax Tree from Infix Expressions
+	************************************************************
+-->
+<p><a href="#TOP" class="backtotop">[Back to top]</a></p><br>
+<h1 id="ch5">5. Syntax Tree from Infix Expressions</h1>
+<p>
+The last approach we will discuss here is also the most complicated one: The first step is to build a real syntax tree in memory directly from the infix notation using fancy recursive calls. The second and last step (the conspicuous easier step) is then to evaluate the parser tree to get the actual result value.<br>
+This work is based on [2] - however I hope my explanations and code in Java instead of Python will some of you to understand this approach better.<br><br>
+
+At first we require a class that represents one node of our tree to build. As in every tree, we have a link to the right and left child and a variable to hold the actual value of the node. As a syntax tree node may contain an operator (a char in my case) and also a numerical value (double) I have chosen the actual node value of type object for simplicity.
+</p>
+
+<div class="codetable">
+<span class="codekw">public class</span> ParserTreeNode {<br>
+&nbsp; <span class="codekw">public</span> ParserTreeNode leftTree;<br>
+&nbsp; <span class="codekw">public</span> ParserTreeNode rightTree;<br>
+&nbsp; <span class="codekw">public</span> Object value;<br>
+}
+</div>
+
+
+<!--
+	************************************************************
+	* Creating the syntax tree
+	************************************************************
+-->
+<p><a href="#TOP" class="backtotop">[Back to top]</a></p><br>
+<h3 id="ch51">5.1 Creating the syntax tree</h3>
+
+<p>
+The algorithm has three main functions which calls themselves recursively to build the abstract syntax tree from the infix expression step by step. These are:
+</p>
+<ul>
+ <li><i>parseMulDiv()</i> : Parses a term containing a muliplication or division and returns the root node of the tree for this term.</li>
+ <li><i>parseAddSub()</i> : Parses a term containing a addition or subtraction and returns the root node of the tree for this term.</li>
+ <li><i>parseSimpleTerm()</i> : Parses a simple term which is either just a single number or a new term starting with an opening bracket and returns the root node of the tree for this term.</li>
+</ul>
+<p>
+Additonally, there is a helper function <i>extractNextNumber()</i> which just returns the double value of a numerical string. Also there is a method <i>getNextTokenType()</i> which returns the type of next object in the input infix string - this can be either a number, a operator or a bracket.
+</p>
+<p>
+Let's start with a term containing only numbers and additive operators (no brackets):<br> The method parseAddSub() shall return the root node of the generated (sub)tree. A term with only two operands of the form <span class="graytext">"a+b"</span> is easy to construct - the addition operation is the root node and the two operands form the the two child notes.
+More interesting is the case with more operands like in <span class="graytext">"a+b+c"</span>: at first we build a tree from <span class="graytext">"a+b"</span> like previously. However, the next '+' operator must become the new root node and the previous root node (the '+' with childs 'a' and 'b') must become the left child of the new root node. 'c' then becomes the right child node of the new root node. Following algorithm does exactly this procedure:
+</p>
+
+<div class="codetable">
+01: &nbsp; <span class="codekw">public</span> ParserTreeNode parseAddSub_Simple() <span class="codekw">throws</span> ParserException<br>
+02: &nbsp; {<br>
+03: &nbsp;&nbsp;&nbsp; <span class="codecomment">// parse first number of string and mnake it the rootnode</span><br>
+04: &nbsp;&nbsp;&nbsp; ParserTreeNode rootNode = parseSimpleTerm();<br>
+05: &nbsp;&nbsp;&nbsp; <span class="codecomment">// get next token of input string</span><br>
+06: &nbsp;&nbsp;&nbsp; TokenType nextToken = getNextTokenType();<br>
+07: <br>
+08: &nbsp;&nbsp;&nbsp; <span class="codecomment">// <span class="codekw">if</span> the next token is a '+' or a '-', handle it</span><br>
+09: &nbsp;&nbsp;&nbsp; <span class="codekw">while</span> (nextToken == TokenType.PLUS || nextToken == TokenType.MINUS)<br>
+10: &nbsp;&nbsp;&nbsp; {<br>
+11: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// make the plus or minus operator the <span class="codekw">new</span> root node</span><br>
+12: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ParserTreeNode newRootNode;<br>
+13: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (nextToken == TokenType.PLUS)<br>
+14: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+15: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newRootNode = <span class="codekw">new</span> ParserTreeNode('+');<br>
+16: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+17: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">else</span><br>
+18: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+19: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newRootNode = <span class="codekw">new</span> ParserTreeNode('-');<br>
+20: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+21: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// previous root node becomes <span class="codekw">new</span> left child tree</span><br>
+22: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newRootNode.leftTree = rootNode;<br>
+23: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// the next number becomes the right child tree of <span class="codekw">new</span> root node</span><br>
+24: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newRootNode.rightTree = parseSimpleTerm();<br>
+25: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// set <span class="codekw">new</span> root node active</span><br>
+26: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rootNode = newRootNode;<br>
+27: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codecomment">// get next token</span><br>
+28: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nextToken = getNextTokenType();<br>
+29: &nbsp;&nbsp;&nbsp; }<br>
+30: &nbsp;&nbsp;&nbsp; restoreLastTokenType(); <span class="codecomment"> // restore not-processed token from line 28 </span><br>
+31: &nbsp;&nbsp;&nbsp; <span class="codekw">return</span> rootNode;<br>
+32: &nbsp; }
+</div>
+
+<p>Let's process this algorithm step-by-step with the example term "1+2+3":</p>
+
+
+<table class="inputExampleTable">
+ <tr>
+  <td style="width:300px; font-weight:bold">Input Term (with marker of next token)</td>
+  <td style="width:50%; font-weight:bold">Description</td>
+  <td style="font-weight:bold">Current tree</td>
+ </tr>
+ <tr>
+  <td>1+2+3<br>^</td>
+  <td>Initial input data when entering parseAddSub_Simple</td>
+  <td>-</td>
+ </tr>
+ <tr>
+  <td>1+2+3<br>&nbsp;^</td>
+  <td>At line 4, build the root node '1'</td>
+  <td><img src="images/Example1_1.png" alt="Example1_1" /></td>
+ </tr>
+ <tr>
+  <td>1+2+3<br>&nbsp;&nbsp;^</td>
+  <td>At line 6, get the first '+' operator.</td>
+  <td><img src="images/Example1_1.png" alt="Example1_1" /></td>
+ </tr>
+ <tr>
+  <td>1+2+3<br>&nbsp;&nbsp;^</td>
+  <td>At line 8, enter the while loop as nextToken is a '+'.</td>
+  <td><img src="images/Example1_1.png" alt="Example1_1" /></td>
+ </tr>
+ <tr>
+  <td>1+2+3<br>&nbsp;&nbsp;&nbsp;^</td>
+  <td>At line 26, a new root node '+' was created, the previous root node '1' was appended as left child and the next number '2' was appended as right child.</td>
+  <td><img src="images/Example1_2.png" alt="Example1_2" /></td>
+ </tr>
+  <tr>
+  <td>1+2+3<br>&nbsp;&nbsp;&nbsp;&nbsp;^</td>
+  <td>At line 28, get the second '+' operator.</td>
+  <td><img src="images/Example1_2.png" alt="Example1_2" /></td>
+ </tr>
+ <tr>
+  <td>1+2+3<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^</td>
+  <td>At line 26 again, a new root node '+' was created, the previous root node / tree was appended as left child and the next number '3' was appended as right child. Afterwards the method is left as there is no further operator in the input string.</td>
+  <td><img src="images/Example1_3.png" alt="Example1_3" /></td>
+ </tr>
+</table>
+
+<p>The corresponding function <i>parseMulDiv()</i> to handle solely multiplication and division works exactly the same, so I skip the listing here.<br>
+So two points are open: First how to combine both functions to handle expressions containing additive as well as multiplicative operators? Multiplicative operators have higher priority than additive operators, so they must be processed before. This simply concludes to the fact that in function <i>parseAddSub()</i> we call <i>parseMulDiv()</i> to build the right child node (tree)!<br>
+The second point is how to handle brackets? A subterm embraced by brackets can be treated a new term - the operator priority starts from scratch. So the best way is to alter the function parseSimpleTerm(). Either the next token is a simple number, so it returns just this single node. Or the next token is an opening bracket. In this case it shall return a whole subtree representing the expression inside the brackets. This can be accomplished by calling the function <i>parseAddSub()</i> again!<br>
+Most probably it becomes more clear from the full code listing:</p>
+
+<div class="codetable">
+<span class="codecomment">/**<br>
+&nbsp;* Parse a term with addition or subtraction operator -> Operator priority 1.<br>
+&nbsp;*<br>
+&nbsp;* @<span class="codekw">return</span><br>
+&nbsp;* @<span class="codekw">throws</span> ParserException<br>
+&nbsp;*/</span><br>
+<span class="codekw">private</span> ParserTreeNode parseAddSub() <span class="codekw">throws</span> ParserException<br>
+{<br>
+&nbsp; ParserTreeNode rootNode = parseMulDiv();<br>
+&nbsp; TokenType nextToken = getNextTokenType();<br>
+<br>
+&nbsp; <span class="codekw">while</span> (nextToken == TokenType.PLUS || nextToken == TokenType.MINUS)<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; ParserTreeNode newRootNode;<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (nextToken == TokenType.PLUS)<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newRootNode = <span class="codekw">new</span> ParserTreeNode('+');<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span><br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newRootNode = <span class="codekw">new</span> ParserTreeNode('-');<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codecomment">// previous root node becomes <span class="codekw">new</span> left tree</span><br>
+&nbsp;&nbsp;&nbsp; newRootNode.leftTree = rootNode;<br>
+&nbsp;&nbsp;&nbsp; newRootNode.rightTree = parseMulDiv();<br>
+&nbsp;&nbsp;&nbsp; <span class="codecomment">// set <span class="codekw">new</span> root node active</span><br>
+&nbsp;&nbsp;&nbsp; rootNode = newRootNode;<br>
+<br>
+&nbsp;&nbsp;&nbsp; nextToken = getNextTokenType();<br>
+&nbsp; }<br>
+&nbsp; restoreLastTokenType();<br>
+&nbsp; <span class="codekw">return</span> rootNode;<br>
+}<br>
+<br>
+<span class="codecomment">/**<br>
+* Parse a term with multiplier or divider operator -> Operator priority 2.<br>
+* @<span class="codekw">return</span><br>
+* @<span class="codekw">throws</span> ParserException<br>
+*/</span><br>
+<span class="codekw">private</span> ParserTreeNode parseMulDiv() <span class="codekw">throws</span> ParserException<br>
+{<br>
+&nbsp; ParserTreeNode rootNode = parseSimpleTerm();<br>
+&nbsp; TokenType nextToken = getNextTokenType();<br>
+<br>
+&nbsp; <span class="codekw">while</span> (nextToken == TokenType.MULTIPY || nextToken == TokenType.DIVIDE)<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; ParserTreeNode newRootNode;<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (nextToken == TokenType.MULTIPY)<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newRootNode = <span class="codekw">new</span> ParserTreeNode('*');<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span><br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newRootNode = <span class="codekw">new</span> ParserTreeNode('/');<br>
+&nbsp;&nbsp;&nbsp; }<br>
+<br>
+&nbsp;&nbsp;&nbsp; <span class="codecomment">// previous root node becomes <span class="codekw">new</span> left tree</span><br>
+&nbsp;&nbsp;&nbsp; newRootNode.leftTree = rootNode;<br>
+&nbsp;&nbsp;&nbsp; newRootNode.rightTree = parseSimpleTerm();<br>
+&nbsp;&nbsp;&nbsp; <span class="codecomment">// set <span class="codekw">new</span> root node active</span><br>
+&nbsp;&nbsp;&nbsp; rootNode = newRootNode;<br>
+<br>
+&nbsp;&nbsp;&nbsp; nextToken = getNextTokenType();<br>
+&nbsp; }<br>
+&nbsp; restoreLastTokenType();<br>
+&nbsp; <span class="codekw">return</span> rootNode;<br>
+}<br>
+<br>
+<span class="codecomment">/**<br>
+&nbsp;* Parse a single simple term, this is either a number or a nested term with brackets.<br>
+&nbsp;* @<span class="codekw">return</span><br>
+&nbsp;* @<span class="codekw">throws</span> ParserException<br>
+&nbsp;*/</span><br>
+<span class="codekw">private</span> ParserTreeNode parseSimpleTerm() <span class="codekw">throws</span> ParserException<br>
+{<br>
+&nbsp; TokenType nextToken = getNextTokenType();<br>
+&nbsp; ParserTreeNode rootNode = null;<br>
+&nbsp; <span class="codekw">if</span> (nextToken == TokenType.NUMBER)<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">double</span> num = extractNextNumber();<br>
+&nbsp;&nbsp;&nbsp; rootNode = <span class="codekw">new</span> ParserTreeNode(num);<br>
+&nbsp; }<br>
+&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (nextToken == TokenType.OPENING_BRACKET)<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; rootNode = parseAddSub();<br>
+&nbsp;&nbsp;&nbsp; nextToken = getNextTokenType();<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (nextToken != TokenType.CLOSING_BRACKET)<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">throw</span> <span class="codekw">new</span> ParserException("Missing closing bracket");<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp; }<br>
+&nbsp; <span class="codekw">return</span> rootNode;<br>
+}<br>
+<br>
+<span class="codecomment">/**<br>
+&nbsp;* Parses a single number.<br>
+&nbsp;* @<span class="codekw">return</span><br>
+&nbsp;* @<span class="codekw">throws</span> ParserException<br>
+&nbsp;*/</span><br>
+<span class="codekw">private</span> <span class="codekw">double</span> extractNextNumber() <span class="codekw">throws</span> ParserException<br>
+{<br>
+&nbsp; <span class="codekw">int</span> posNumEnd;<br>
+&nbsp; <span class="codekw">for</span> (posNumEnd = currentTermPos; posNumEnd &lt; term.length(); posNumEnd++)<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> ((term.charAt(posNumEnd) &lt; '0' || term.charAt(posNumEnd) > '9') && term.charAt(posNumEnd) != '.')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br>
+&nbsp; }<br>
+<br>
+&nbsp; <span class="codekw">if</span> (posNumEnd > term.length())<br>
+&nbsp;&nbsp;&nbsp; <span class="codecomment">// given term does not start with a number</span><br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">throw</span> <span class="codekw">new</span> ParserException(term + " is not a number.");<br>
+<br>
+&nbsp; <span class="codecomment">// extract the number string</span><br>
+&nbsp; <span class="codekw">String</span> sub = term.substring(currentTermPos, posNumEnd);<br>
+&nbsp; <span class="codecomment">// 'sub' contains now just the number</span><br>
+&nbsp; <span class="codekw">double</span> x;<br>
+&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp; x = Double.parseDouble(sub);<br>
+&nbsp; } catch (NumberFormatException ex) {<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">throw</span> <span class="codekw">new</span> ParserException("<span class="codekw">String</span> to number parsing exception: " + sub);<br>
+&nbsp; }<br>
+<br>
+&nbsp; <span class="codecomment">// move on to next token</span><br>
+&nbsp; currentTermPos = currentTermPos + (posNumEnd - currentTermPos);<br>
+&nbsp; <span class="codekw">return</span> x;<br>
+}
+</div>
+
+<p>The starting method to be called is <i>parseAddSub()</i>.</p>
+
+
+<!--
+	************************************************************
+	* Evaluating the syntax tree
+	************************************************************
+-->
+<p><a href="#TOP" class="backtotop">[Back to top]</a></p><br>
+<h3 id="ch52">5.2 Evaluating the syntax tree</h3>
+<p>
+Once the syntax tree is build, the evaluation of the tree to get the actual result of the mathematical expression is quite simple. The procedure starts at the root node and works its way recursivly down the tree. At each node, first the left and right node is evaluated before both operands are applied to the operator of the current node. So even the starting point is the root node (top-down), the actual evaluation of the subtree starts at the leaves (bottom-up). Here the simple code:
+</p>
+
+<div class="codetable">
+<span class="codecomment">/** This function evaluates a parsertree and returns the result of the expression.<br>
+&nbsp;* @param tree: the root node of the parser tree<br>
+&nbsp;*/</span><br>
+<span class="codekw">private</span> <span class="codekw">double</span> evaluateParserTree(ParserTreeNode tree)<br>
+{<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (tree == null)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> Double.NaN;<br>
+<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">if</span> (tree.value.toString().equals("+"))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> evaluateParserTree(tree.leftTree) + evaluateParserTree(tree.rightTree);<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (tree.value.toString().equals("-"))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> evaluateParserTree(tree.leftTree) - evaluateParserTree(tree.rightTree);<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (tree.value.toString().equals("*"))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> evaluateParserTree(tree.leftTree) * evaluateParserTree(tree.rightTree);<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span> <span class="codekw">if</span> (tree.value.toString().equals("/"))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> evaluateParserTree(tree.leftTree) / evaluateParserTree(tree.rightTree);<br>
+&nbsp;&nbsp;&nbsp; <span class="codekw">else</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="codekw">return</span> Double.valueOf(tree.value.toString()).doubleValue();<br>
+}
+</div>
+
+
+<!--
+	************************************************************
+	* Final words
+	************************************************************
+-->
+<p><a href="#TOP" class="backtotop">[Back to top]</a></p><br>
+<h1 id="ch6">6. Final words</h1>
+<p>
+So I hope you learned something from this article, did not fall asleep and understand now simple parser techniques. Feel free to use my source code as a starting point, but if so be fair and give me some credits and/or link my site.
+So have fun with the source and keep coding!<br>
+Questions, criticism, praise? Mail me or leave some comments in the guestbook!<br><br>
+Sunshine, September 2015 (first version: October 2010)
+</p>
+
+<br>
+<h3>References</h3>
+<a id="ref1"> </a>[1]<a href="http://en.wikipedia.org/wiki/Reverse_Polish_notation"> Reverse Polish Notation @ Wikipedia</a><br>
+<a id="ref2"> </a>[2]<a href="http://www.greenteapress.com/thinkpython/thinkCSpy/html/chap20.html"> How to Think Like a Computer
+Scientiest - Python Version - Chapter 20</a><br>
+
+<br>
+
+<footer>
+<hr>
+<p>This site is part of <a href="http://www.sunshine2k.de">Sunshine's Homepage</a></p>
+</footer>
+
+<p><!-- Google analytics -->
+ <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+ </script>
+</p>
+<script type="text/javascript">
+_uacct = "UA-2878002-1";
+urchinTracker();
+</script>
+
+
+
+</div>
+</body>
+</html>
