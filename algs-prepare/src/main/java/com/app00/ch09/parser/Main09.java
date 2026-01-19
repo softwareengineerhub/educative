@@ -21,7 +21,7 @@ public class Main09 {
     private static SimpleParser getParser(int type) {
         switch (type) {
             case 0:
-                return new RecursiveSimpleParser02();
+                return new RecursiveSimpleParser();
             default:
                 return new RecursiveSimpleParser();
 
