@@ -449,11 +449,11 @@ Each mathematical expression can be given as a tree. Of course there are algorit
 Consider the term <span class="graytext">"(3+5)*2+(6-3)"</span> - the corresponding syntax tree comes here:
 </p>
 
-<img src="images/syntaxtree4.gif" alt="Syntax tree" style="display: block; margin-left:auto; margin-right:auto" />
+<img src="images/1.gif" alt="Syntax tree" style="display: block; margin-left:auto; margin-right:auto" />
 
 <p>If you have such a syntax tree, just travel it in postorder. Postorder means that at each node you do the following: 1) travel left subtree 2) travel right subtree 3) visit actual node.</p>
 
-<img src="images/postorder3.gif" alt="Syntax tree postorder" style="display: block; margin-left:auto; margin-right:auto" />
+<img src="images/2.gif" alt="Syntax tree postorder" style="display: block; margin-left:auto; margin-right:auto" />
 
 <p>
 So the red line shows the postorder travel way and the green numbers the 'stations' on the way. At position 1 we have unvisitied subtree so we continue; the same with position 2. At position 3 there is neither a left nor a right subtree to travel, so it's the last time we come around position 3, therefore we note down the node value which is 3. If we continue this procedure the whole tree (until we reach the root node the last time), we have finally the postfix notation which is in this case 3 5 + 2 * 6 3 - +. In <a href="#ch44">4.4</a> we will finally evaluate this expression as an example. Before that let's look at the stack approach to create the postfix notation which is quite easier in implementation than the postorder tree traveling ;-)
