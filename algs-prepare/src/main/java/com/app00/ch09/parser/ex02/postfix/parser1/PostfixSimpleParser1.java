@@ -1,10 +1,11 @@
-package com.app00.ch09.parser.ex02.postfix;
+package com.app00.ch09.parser.ex02.postfix.parser1;
 
 import com.app00.ch09.parser.SimpleParser;
+import com.app00.ch09.parser.ex02.postfix.parser2.PostfixSimpleParser2;
 
 import java.util.Stack;
 
-public class PostfixSimpleParser implements SimpleParser {
+public class PostfixSimpleParser1 implements SimpleParser {
 
     @Override
     public double calculate(String text) {
@@ -16,48 +17,52 @@ public class PostfixSimpleParser implements SimpleParser {
     public String createPostFix(String text) {
         StringBuilder result = new StringBuilder();
         Stack<Character> operandStack = new Stack();
-        String tmp = "";
         for (char ch : text.toCharArray()) {
             if (Character.isDigit(ch)) {
-                //result.append(ch);
-                tmp=tmp+ch;
+                result.append(ch + " ");
             } else if (ch == '(') {
                 operandStack.push(ch);
             } else if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
-                if (!tmp.isEmpty()) {
-                    result.append(tmp);
-                    result.append(" ");
-                    tmp = "";
-                }
-
-                while(!operandStack.isEmpty()) {
-                    char topAction = operandStack.pop();
-                    if (topAction == '+' || topAction == '-' || topAction == '*' || topAction == '/') {
-                        result.append(topAction);
-                        result.append(" ");
-                    }
-                    if(topAction=='('){
+                while (!operandStack.isEmpty()) {
+                    char topOperator = operandStack.peek();
+                    if (operatorHasSameOrHigherPriority(ch, topOperator)) {
+                        result.append(topOperator + " ");
+                        operandStack.pop();
+                    } else {
                         break;
                     }
                 }
                 operandStack.push(ch);
-            } else if(ch==')'){
-                if (!tmp.isEmpty()) {
-                    result.append(tmp);
-                    result.append(" ");
-                    tmp = "";
-                }
-                while(!operandStack.isEmpty()){
-                    char action = operandStack.pop();
-                    if(action=='('){
+            } else if (ch == ')') {
+
+                while (!operandStack.isEmpty()) {
+                    char topOperator = operandStack.pop();
+                    if (topOperator == '(') {
                         break;
                     }
-                    result.append(action);
-                    result.append(" ");
+                    result.append(topOperator + " ");
                 }
             }
         }
+
+        while (!operandStack.isEmpty()) {
+            char topAction = operandStack.pop();
+            if (topAction != '(') {
+                result.append(topAction + " ");
+            }
+        }
+
         return result.toString().trim();
+    }
+
+    private boolean operatorHasSameOrHigherPriority(char a, char b) {
+        if (a == '+' || a == '-') {
+            return a == '+' || a == '-' || a == '*' || a == '/';
+        }
+        if (a == '*' || a == '/') {
+            return b == '*' || b == '/';
+        }
+        return false;
     }
 
     public double evaluatePostFix(String text) {
@@ -69,7 +74,7 @@ public class PostfixSimpleParser implements SimpleParser {
                 double left = stack.pop();
                 double result = getResult(item, left, right);
                 stack.push(result);
-            } else {
+            } else if (!item.equals("(")) {
                 stack.push(Double.parseDouble(item));
             }
         }
@@ -96,7 +101,7 @@ public class PostfixSimpleParser implements SimpleParser {
     }
 
     public static void main2(String[] args) {
-        PostfixSimpleParser parser = new PostfixSimpleParser();
+        PostfixSimpleParser2 parser = new PostfixSimpleParser2();
         String source = "(3+5)*2+(6-3)";
         String postFix = parser.createPostFix(source);
         System.out.println("postFix=" + postFix);
@@ -109,7 +114,7 @@ public class PostfixSimpleParser implements SimpleParser {
 
 
     public static void main(String[] args) {
-        PostfixSimpleParser parser = new PostfixSimpleParser();
+        PostfixSimpleParser1 parser = new PostfixSimpleParser1();
         String source = "3+4*5";
         String postFix = parser.createPostFix(source);
         System.out.println("postFix=" + postFix);

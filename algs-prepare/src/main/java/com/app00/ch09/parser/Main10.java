@@ -1,7 +1,7 @@
 package com.app00.ch09.parser;
 
 import com.app00.ch09.parser.ex01.recursive.RecursiveSimpleParser;
-import com.app00.ch09.parser.ex02.postfix.PostfixSimpleParser;
+import com.app00.ch09.parser.ex02.postfix.parser2.PostfixSimpleParser2;
 
 public class Main10 {
 
@@ -18,7 +18,7 @@ public class Main10 {
             case 0:
                 return new RecursiveSimpleParser();
             case 1:
-                return new PostfixSimpleParser();
+                return new PostfixSimpleParser2();
             default:
                 return new RecursiveSimpleParser();
 
