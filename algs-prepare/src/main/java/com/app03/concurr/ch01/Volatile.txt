@@ -1,0 +1,18 @@
+The volatile keyword in Java is used to mark a variable as being stored in the main memory, ensuring visibility of changes to variables across threads. This is particularly important in multi-threaded programming where multiple threads access and modify shared data.
+
+Key Points about volatile:
+Visibility:
+
+When a variable is declared as volatile, it guarantees visibility of changes to variables across threads. This means that when one thread modifies a volatile variable, all other threads will immediately see the updated value.
+No Caching:
+
+volatile variables are not cached thread-locally, which means that reads and writes go directly to the main memory. This ensures that all threads see the most recent value of the variable.
+Atomicity for Single Operations:
+
+Operations on volatile variables are atomic for single read and write operations. However, volatile does not provide atomicity for compound actions (like increment or check-then-act operations).
+Ordering:
+
+volatile provides a happens-before relationship, which ensures that operations on the volatile variable happen in a predictable order across threads.
+Use Cases:
+
+volatile is typically used for status flags, counters, or other simple variables that are shared among threads. It is not suitable for complex data structures or compound operations.
